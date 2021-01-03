@@ -39,7 +39,7 @@ app= Flask(__name__)
 @app.route("/")
 def Homepage():
         return '''<html>
-    <h1>Surfs up! Welcome to the Hawaii Climate App</h1>
+    <h1>Surfs up! Welcome to the Hawaii Climate App!</h1>
     <h2>Available Routes:<h2>
         
     <ul>Precipitation Data:</ul>
