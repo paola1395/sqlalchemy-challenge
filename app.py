@@ -61,7 +61,7 @@ def Homepage():
 
 #/api/v1.0/precipitation; Convert the query results to a dictionary using date as the key and prcp as the value.
 #Return the JSON representation of your dictionary
-@app.route(/api/v1.0/precipitation)
+@app.route("/api/v1.0/precipitation")
 def precipitation():
     year_ago= dt.date(2017,8,23) - dt.timedelta(days=365)
     
@@ -74,9 +74,6 @@ def precipitation():
     precip_data_list=dict(precip_data)
     #Return JSON
     return jsonify(precip_data_list)
-
-
-
 
 #/api/v1.0/stations; Return a JSON list of stations from the dataset.
 
