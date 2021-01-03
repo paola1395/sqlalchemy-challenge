@@ -42,13 +42,13 @@ def Homepage():
     <h1>Surfs up! Welcome to the Hawaii Climate App</h1>
     <h2>Available Routes:<h2>
         
-    <ul>Precipitation Analysis:</ul>
+    <ul>Precipitation Data:</ul>
         <li><a href="/api/v1.0/precipitation">/api/v1.0/precipitation</a></li>
         
-    <ul>Station Analysis:</ul>
+    <ul>All Stations:</ul>
         <li><a href="/api/v1.0/stations">/api/v1.0/stations</a></li>
 
-    <ul>Temperature Analysis:</ul>
+    <ul>Temperatures Observed at the Most Active Station: <br>(within the last year)</ul>
         <li><a href="/api/v1.0/tobs">/api/v1.0/tobs</a></li>
 
     <ul>Start Date Analysis:</ul>
@@ -76,19 +76,42 @@ def precipitation():
     return jsonify(precip_data_list)
 
 #/api/v1.0/stations; Return a JSON list of stations from the dataset.
+@app.route("/api/v1.0/stations")
+def stations():
+    all_stations=session.query(Station.station, Station.name).all()
 
+    #Convert into list
+    list_stations= list(all_stations)
 
+    #Return JSON
+    return jsonify(list_stations)
 
 #/api/v1.0/tobs; Query the dates and temperature observations of the most active station for the last year of data.
 #Return a JSON list of temperature observations (TOBS) for the previous year.
+@app.route("/api/v1.0/tobs")
+def tobs():
+    year_ago= dt.date(2017,8,23) - dt.timedelta(days=365)
+    obs_data= session.query(Measurement.tobs).\
+        filter(Measurement.date >= year_ago).\
+        filter(Measurement.station =="USC00519281").\
+        order_by(Measurement.date).all()
+
+    #Convert into list
+    obs_data_list= list(obs_data)
+    #Return JSON
+    return jsonify(obs_data_list)
+    
+#/api/v1.0/<start>; calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date
+#Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start date
+@app.route("/api/v1.0/2017-07-03")
+def start_date():
 
 
 
-
-#/api/v1.0/<start> and /api/v1.0/<start>/<end>
-#Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start or start-end range.
-#When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.
-#When given the start and the end date, calculate the TMIN, TAVG, and TMAX for dates between the start and end date inclusive.
+#/api/v1.0/<start>/<end>; calculate the TMIN, TAVG, and TMAX for dates between the start and end date inclusive.
+#Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start-end range.
+# @app.route("/api/v1.0/2017-07-03/2017-07-09")
+# def start_end_date():
 
 
 if __name__ == "__main__":
